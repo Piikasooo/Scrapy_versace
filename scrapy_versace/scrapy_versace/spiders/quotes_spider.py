@@ -1,21 +1,21 @@
 import scrapy
+from ..items import Product
+from scrapy.loader import ItemLoader
 
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
-    allowed_domains = ["https://www.versace.com"]
-    start_urls = ['https://www.versace.com/us/en-us/home/',]
+    allowed_domains = ["https://www.versace.com/"]
+    start_urls = ['https://www.versace.com/us/en-us/jeans-couture/new-arrivals/new-in-for-her/logo-belt-bag-e899/EE1VVBBL3-E71411_ENU_NR_E899__.html?cgid=11000041#start=1', ]
 
     def parse(self, response):
-        page_link = response.css("li.level-3-item a::attr(href)").getall()
-        for i in page_link:
-            next_page = response.urljoin(i)
-            print(next_page)
-            yield scrapy.Request(url=next_page, callback=self.parse_item)
+        product = ItemLoader(item=Product(), response=response)
+        product.add_css('name', "h1.product-name::text")
+        product.add_css('price', "span.js-sl-price::text")
+        product.add_css('description', "div.product-description::text")
+        return product.load_item()
 
-    def parse_item(self, response):
-        for item in response.css("div.product-name"):
-            yield {
-                'name': item.css("a.name-link::text").get(),
-                'href': item.css("a.name-link::attr(href)").get(),
-            }
+
+
+
+
