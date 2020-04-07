@@ -15,6 +15,7 @@ class QuotesSpider(scrapy.Spider):
     def parse(self, response):
         link = ItemLoader(item=Href(), response=response)
         link.add_css('href', "li.view-all-item a::attr(href)")
+        link.add_css('href', "li.children-category a.subcategory-image-link::attr(href)")
         return link.load_item()
 
     def parse_item(self, response):
