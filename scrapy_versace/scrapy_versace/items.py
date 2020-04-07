@@ -12,3 +12,7 @@ class Product(scrapy.Item):
     name = scrapy.Field()
     price = scrapy.Field()
     description = scrapy.Field()
+
+
+class Href(scrapy.Item):
+    href = scrapy.Field()
